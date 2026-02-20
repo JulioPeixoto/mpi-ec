@@ -1,6 +1,6 @@
 # mpi-ec
 
-API FastAPI para comparar processamento sequencial e paralelo (MPI). Inclui Fibonacci (didatico) e Monte Carlo Pi (ganho de performance real).
+API FastAPI para comparar processamento sequencial e paralelo (MPI) usando Monte Carlo Pi.
 
 ## Requisitos
 
@@ -33,15 +33,6 @@ A imagem inclui OpenMPI. O endpoint paralelo funciona dentro do container.
 
 ## Endpoints
 
-### Fibonacci
-
-| Metodo | Rota | Descricao |
-|--------|------|-----------|
-| GET | `/fib/sequential?n={N}` | Calcula fib(N) de forma sequencial |
-| GET | `/fib/parallel?n={N}` | Calcula fib(N) em paralelo com MPI (3 ranks) |
-
-### Monte Carlo Pi
-
 | Metodo | Rota | Descricao |
 |--------|------|-----------|
 | GET | `/pi/sequential?n={N}` | Estima pi com N amostras (sequencial) |
@@ -49,19 +40,42 @@ A imagem inclui OpenMPI. O endpoint paralelo funciona dentro do container.
 
 ### Parametros
 
-- Fibonacci: `n` = indice (inteiro >= 0)
-- Pi: `n` = numero de amostras (inteiro >= 1)
+- `n` = numero de amostras (inteiro >= 1)
 
 ### Exemplo de uso
 
 ```bash
-curl "http://localhost:8000/fib/sequential?n=30"
-curl "http://localhost:8000/fib/parallel?n=30"
 curl "http://localhost:8000/pi/sequential?n=100000000"
 curl "http://localhost:8000/pi/parallel?n=100000000"
 ```
 
+### Exemplo de resultado (Monte Carlo Pi, n=100)
+
+Com N pequeno, o overhead do MPI domina e o sequencial e muito mais rapido.
+
+Sequencial:
+
+```json
+{
+  "n": 100,
+  "result": 3.24,
+  "duration_ms": 0.02
+}
+```
+
+Paralelo:
+
+```json
+{
+  "n": 100,
+  "result": 2.76,
+  "duration_ms": 249.56
+}
+```
+
 ### Exemplo de resultado (Monte Carlo Pi, n=100000000)
+
+Com N grande, o paralelo compensa o overhead.
 
 Sequencial:
 
@@ -90,8 +104,6 @@ O paralelo reduz o tempo de ~9.8s para ~3.4s (cerca de 2.9x mais rapido com 4 ra
 ```
 src/
   main.py   - API FastAPI com os endpoints
-  mpi.py    - script MPI para Fibonacci paralelo
   mpi_pi.py - script MPI para Monte Carlo Pi paralelo
-  fib.py    - funcao Fibonacci iterativa
   pi.py     - funcao Monte Carlo Pi sequencial
 ```
