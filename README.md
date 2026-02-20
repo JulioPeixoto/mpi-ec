@@ -2,6 +2,10 @@
 
 API FastAPI para comparar processamento sequencial e paralelo (MPI) usando Monte Carlo Pi.
 
+### Monte Carlo Pi (resumo)
+
+Gera N pontos aleatorios no quadrado [0,1]x[0,1], conta quantos caem dentro do circulo unitario (x^2 + y^2 <= 1) e estima pi = 4 * (dentro / total). Com N pequeno o resultado varia a cada execucao; com N grande a estimativa converge para pi.
+
 ## Requisitos
 
 - Python 3.12+
